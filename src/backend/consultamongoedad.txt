@@ -1,0 +1,12 @@
+db.characters.find({},
+{ 
+  "age": {
+    $divide: [
+     {"$subtract": ["$$NOW", "$birth"]},
+     365 * 24 * 60 * 60 * 1000
+    ]},
+    name: 1,
+    lastname: 1,
+    house: 1,
+    birth: 1
+}).pretty()

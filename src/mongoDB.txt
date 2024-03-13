@@ -1,0 +1,172 @@
+DOCKER hay que abrir 2 cmd
+1. docker-compose up
+2. docker exec -it src-mongodb-1 bash
+
+entrar a mongo:
+mongo --username admin 
+
+pedire la contraseña:
+123
+
+cls -- hacer clear
+quit() --salir y volver a la consola
+
+collection -> nombre de la tabla
+find -> hacer consultas
+
+comparaciones:
+gt -> greater than
+lt -> less than
+ne -> not equal
+
+crear tablas 
+db.createCollection("nombre")
+
+insertar
+db.characters.insertOne({
+    "name": "Tom",
+    "lastname": "Riddle",
+    "house": "Slytherin",
+    "birth": new Date("1926-12-31")
+})
+
+---------------------------------------------------------------------
+MONGO PLAYGROUND
+db.collection.find({ -- Sacar productos de más de 1.75 con su nombre
+  pvp: { 
+    $gt: 1.75
+  }
+},
+{
+  _id: false,
+  nombre: true,
+  pvp: true
+})
+
+db.collection.aggregate([ -- Sacar la media del precio
+  {
+    $group: {
+      _id: null,
+      "precio medio": {
+        $avg: "$pvp"
+      }
+    }
+  }
+])
+
+
+db.collection.aggregate([ -- Número de unidades totales de productos que hay en el almacén
+  {
+    $group: {
+      _id: null,
+      "unidades totales": {
+        "$sum": "$stock"
+      }
+    }
+  }
+])
+
+-- Listado con todos los datos de cada producto + el beneficio por producto * stock
+db.collection.find({},
+{
+  "beneficio": {
+    "$subtract": [ -- Calcular beneficio por producto
+      "$pvp",
+      "$precioCompra"
+    ]
+  },
+  "beneficio por producto": {
+    "$multiply": [
+      {
+        "$subtract": [ -- Calcular beneficio * stock. Hay que volver a calcular
+          "$pvp",
+          "$precioCompra"
+        ]
+      },
+      "$stock" -- Para multiplicar aquí con stock
+    ]
+  },
+  nombre: true,
+  precioCompra: true,
+  pvp: true,
+  stock: true
+})
+-------------------------------------------------------------------------------------------------
+db.usuarios.insert({nombre: "Elba", apellido: "Garcia"})
+
+> db.usuarios.find({nombre: "Elba"},{_id: false, nombre: true, edad: true})
+{ "nombre" : "Elba", "edad" : 23 }
+> db.usuarios.find({},{_id: false, nombre: true, edad: true})
+{ "nombre" : "Morgan" }
+{ "nombre" : "Mario" }
+{ "nombre" : "Pere", "edad" : 67 }
+{ "nombre" : "Elba", "edad" : 23 }
+
+> db.usuarios.find({nombre: {$ne: "Elba"}}) --ne significa 'not equal'
+
+> db.usuarios.find().sort({apellido: 1}) -- ordenar por apellido en orden, o al reves -1
+
+> db.usuarios.aggregate([{$group: {_id: "$pais", repetidos: {$sum: 1}}}]) -- para que cuente cuantos hay de cada país. Hay que poner 1 para que salgan, si se pone 2, multiplica el resultado *2
+{ "_id" : "Tanzania", "repetidos" : 1 }
+{ "_id" : "Francia", "repetidos" : 2 }
+{ "_id" : "Uruguay", "repetidos" : 1 }
+{ "_id" : null, "repetidos" : 5 }
+{ "_id" : "Portugal", "repetidos" : 1 }
+{ "_id" : "Venezuela", "repetidos" : 1 }
+{ "_id" : "USA", "repetidos" : 2 }
+{ "_id" : "España", "repetidos" : 1 }
+>
+
+> db.usuarios.aggregate([{$group: {_id: "$pais", repetidos: {$sum: 1}, edad:{$avg: "$edad"}}}]) -- cuantas personas por nacionalidad y su edad media
+{ "_id" : "USA", "repetidos" : 2, "edad" : 24.5 }
+{ "_id" : "Tanzania", "repetidos" : 1, "edad" : 30 }
+{ "_id" : "Uruguay", "repetidos" : 1, "edad" : 78 }
+{ "_id" : null, "repetidos" : 5, "edad" : 36.75 }
+{ "_id" : "Portugal", "repetidos" : 1, "edad" : 42 }
+{ "_id" : "Venezuela", "repetidos" : 1, "edad" : 43 }
+{ "_id" : "Francia", "repetidos" : 2, "edad" : 36.5 }
+{ "_id" : "España", "repetidos" : 1, "edad" : 26 }
+>
+
+-- aquí para quitar los usuarios que su pais es NULL con $ne: null (Not equal == NULL)
+> db.usuarios.aggregate([{$match: {pais: {$ne: null}}},{$group: {_id: "$pais", repetidos: {$sum: 1}, edad:{$avg: "$edad"}}}])
+{ "_id" : "Venezuela", "repetidos" : 1, "edad" : 43 }
+{ "_id" : "España", "repetidos" : 1, "edad" : 26 }
+{ "_id" : "Uruguay", "repetidos" : 1, "edad" : 78 }
+{ "_id" : "Portugal", "repetidos" : 1, "edad" : 42 }
+{ "_id" : "Francia", "repetidos" : 2, "edad" : 36.5 }
+{ "_id" : "USA", "repetidos" : 2, "edad" : 24.5 }
+{ "_id" : "Tanzania", "repetidos" : 1, "edad" : 30 }
+>
+
+ db.usuarios.find({apellido: /e/}) --usuarios que tengan una 'e' en su apellido sin importar posición
+
+> db.usuarios.find({nombre: /ba$/}) -- usuarios que su nombre termine en 'ba'
+{ "_id" : ObjectId("65c65de8a40914f0c85b6c10"), "nombre" : "Elba", "apellido" : "Lazo", "edad" : 23 }
+{ "_id" : ObjectId("65c67128e348e50c0073d355"), "nombre" : "Elba", "apellido" : "Surero", "edad" : 50, "pais" : "Francia" }
+
+> db.usuarios.find({nombre: /^El/}) -- usuarios que su nombre empieza en 'El' sensible a las mayúsculas
+> db.usuarios.find({nombre: /^[Ee]l/}) -- poniendolo entre corchetes [] coge cualquiera de las formas (mayus/minus)
+> db.usuarios.find({nombre: /^[aeiouAEIOU]/}) -- nombres que empiezan por vocal
+
+> db.usuarios.find().limit(3).pretty() -- para limitar a 3 y ponerlo 'bonito'
+{
+        "_id" : ObjectId("65c65cafa40914f0c85b6c0d"),
+        "nombre" : "Morgan",
+        "apellido" : "González"
+}
+{
+        "_id" : ObjectId("65c65d52a40914f0c85b6c0f"),
+        "nombre" : "Salva",
+        "apellido" : "Gil",
+        "edad" : 67
+}
+{
+        "_id" : ObjectId("65c65de8a40914f0c85b6c10"),
+        "nombre" : "Elba",
+        "apellido" : "Lazo",
+        "edad" : 23
+}
+-- Para crear un empleado con validaciones
+> db.createCollection("empleado", {validator: {$and: [{nombre: {$type: "string"}}, {sueldo: {$type: "number"}}, {email:{$regex: /@/}}]}})
+> db.empleado.insert({nombre: "Aitor Tilla", sueldo: 1200, email: "aitor@gmail.com"})

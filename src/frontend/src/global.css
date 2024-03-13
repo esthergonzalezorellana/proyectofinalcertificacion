@@ -1,0 +1,55 @@
+/**
+ * Tailwind CSS imports
+ * View the full documentation at https://tailwindcss.com
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@layer base {
+    td {
+        @apply text-center;
+    }
+
+    .buttonStyle {
+        @apply text-gray-900 text-sm rounded-lg block w-full p-2.5  dark:text-white;
+    }
+
+    button {
+        @apply px-2 py-1 cursor-pointer rounded-md text-white;
+    }
+
+    i {
+        @apply mr-1;
+    }
+
+    .button-red {
+        @apply w-40 h-11 mt-4 mr-3 bg-red-950;
+    }
+
+    .button-green {
+        @apply w-40 h-11 mt-4 mr-3 bg-green-950;
+    }
+
+    .button-yellow {
+        @apply w-40 h-11 mt-4 mr-3 bg-yellow-600;
+    }
+
+    .button-blue {
+        @apply w-40 h-11 mt-4 mr-3 bg-blue-800;
+    }
+    .button-old {
+        @apply w-40 h-11 mt-4 mr-3 bg-slate-600;
+    }
+
+    .button-all {
+        @apply w-40 h-11 mt-4 mr-3 bg-yellow-800;
+    }
+
+    .button-age-highlighted {
+        @apply w-40 h-11 mt-4 mr-3 bg-purple-500;
+    }
+}
+
