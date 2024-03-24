@@ -11,6 +11,6 @@
 
 # Personajes de Gryffindor ![gryffindor](gryffindor.PNG)
 
-# Personajes de más de 100 años ![centenarios](centerarios.PNG)
+# Personajes de más de 100 años ![centenarios](centenarios.PNG)
 
 # Enlace a YOUTUBE: https://youtu.be/OuVzKKdIBag 
