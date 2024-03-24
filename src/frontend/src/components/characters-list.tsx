@@ -1,6 +1,6 @@
 import { component$, useStore, useTask$, useVisibleTask$, $, useSignal } from '@builder.io/qwik';
 import { Character } from '~/models/characters';
-import { addCharacter, deleteCharacter, getCentenaries, getCharacters, getGryffindor, getHufflepuff, getRavenclaw, getSlytherin, updateCharacter, getByRole } from '~/utils/users-provider';
+import { addCharacter, deleteCharacter, getCentenaries, getCharacters, getGryffindor, getHufflepuff, getRavenclaw, getSlytherin, updateCharacter } from '~/utils/characters-provider';
 
 
 
@@ -37,10 +37,13 @@ export const UsersList = component$(() => {
         store.characters = await getCharacters() // se ejecuta en el inspector del navegador (cliente)
     })
 
+    
+
     const handleSubmit = $(async (event) => {
         event.preventDefault() // evita el comportamiento por defecto
         if (addOrModify.value === 'Añadir') {
             await addCharacter(form)
+
         } else {
             await updateCharacter(old_id.value, form)
             addOrModify.value = "Añadir"
@@ -48,6 +51,8 @@ export const UsersList = component$(() => {
         }
 
     })
+
+    
     const handleInputChange = $((event: any) => {
         const target = event.target as HTMLInputElement
         form[target.name] = target.value
@@ -75,6 +80,8 @@ export const UsersList = component$(() => {
         await deleteCharacter(id)
         store.characters = await getCharacters()
     })
+        
+
     return (
         <div class="flex-col w-full justify-center">
             <div class="flex w-full justify-center">
@@ -132,6 +139,7 @@ export const UsersList = component$(() => {
                                     <td>
                                         <label for="house"></label>
                                         <select name="house" id="house" value={form.house} onInput$={handleInputChange} class="buttonStyle">
+                                            <option value="" disabled selected>Choose an option</option>
                                             <option value="Gryffindor">Gryffindor</option>
                                             <option value="Hufflepuff">Hufflepuff</option>
                                             <option value="Slytherin">Slytherin</option>
@@ -216,3 +224,4 @@ export const UsersList = component$(() => {
         </div >
     )
 });
+

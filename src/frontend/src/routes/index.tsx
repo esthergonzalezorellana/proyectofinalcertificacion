@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { UsersList } from "~/components/users-list";
+import { UsersList } from "~/components/characters-list";
 
 export default component$(() => {
   return (

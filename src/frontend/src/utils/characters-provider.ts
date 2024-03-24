@@ -123,14 +123,3 @@ export const getCentenaries = async (): Promise<Character[]>  => {
     return <Character[]><unknown>null
 }
 
-// export const getByRole = async (): Promise<Character[]>  => {
-//     try {
-//         const response = await fetch('http://localhost:8000/characters/{role}/')
-//         const charactersbyrole = await response.json()
-//         return charactersbyrole
-//     } catch (error) {
-//         console.error(error)
-//     }
-
-//     return [];
-// }

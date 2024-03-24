@@ -93,6 +93,14 @@ async def list_characters():
 async def create_characters(character: Character):
     character_dict = character.dict()
     character_dict["birth"] = datetime.combine(character.birth, datetime.min.time())
+    
+    # Verificar si el id del personaje ya existe en la base de datos
+    existing_character = await db["characters"].find_one({"id": character.id})
+    if existing_character is not None:
+        # Si el id ya existe, devolver un mensaje de error
+        raise HTTPException(status_code=400, detail="Character id already exists")
+    
+    # Insertar el personaje en la base de datos
     await db["characters"].insert_one(character_dict)
     return character
 
@@ -112,7 +120,7 @@ async def delete_character(id: int):
     if delete_result.deleted_count == 0:
         raise HTTPException(status_code=404, detail=f"Character with id {id} not found.")
 
-# Endpoint para actualizar un personajes especifico por id.
+#Endpoint para actualizar un personajes especifico por id.
 @app.put("/characters/{id}", response_description="Update a character by an id", status_code=204)
 async def update_character(id: int, character: Character):
     character_dict = character.dict()
