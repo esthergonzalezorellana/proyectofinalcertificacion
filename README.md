@@ -7,4 +7,10 @@
 
 # MongoDB, Python, FASTApi y Qwik
 
+# Todos los personajes  ![todos](todos.PNG)
+
+# Personajes de Gryffindor ![gryffindor](gryffindor.PNG)
+
+# Personajes de más de 100 años ![centenarios](centerarios.PNG)
+
 # Enlace a YOUTUBE: https://youtu.be/OuVzKKdIBag 
